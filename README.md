@@ -2,6 +2,8 @@
 
 ![bash1](https://user-images.githubusercontent.com/13176091/54089658-f3acd100-4373-11e9-806c-67c8a018e1dd.png)
 
+![bash-small](https://user-images.githubusercontent.com/13176091/54089754-070c6c00-4375-11e9-8495-d06e9d5f3fe3.png)
+
 Для сборки ```firmware``` для ESP32 и ESP8266 используются идентичные скрипты ```makeESP32``` и ```makeESP8266```. Скрипты различаются только параметрами передаваемыми ```esptool.py```. 
 
 Для работы скрипта, необходимо:
