@@ -1,8 +1,10 @@
 ## Build MicroPython for microcontrollers and ESP8266 ESP32
 
-[![micropython](https://user-images.githubusercontent.com/13176091/53680744-4dfcc080-3ce8-11e9-94e1-c7985181d6a5.png)](https://micropython.org/)
+![bash1](https://user-images.githubusercontent.com/13176091/54089658-f3acd100-4373-11e9-806c-67c8a018e1dd.png)
 
-Для сборки firmware для ESP32 и ESP8266 используются идентичные скрипты ```makeESP32``` и ```makeESP8266```. Скрипты различаются только параметрами передаваемыми ```esptool.py```. Для работы скрипта, необходимо:
+Для сборки ```firmware``` для ESP32 и ESP8266 используются идентичные скрипты ```makeESP32``` и ```makeESP8266```. Скрипты различаются только параметрами передаваемыми ```esptool.py```. 
+
+Для работы скрипта, необходимо:
 
 #### Для ESP8266
 * [MicroPython port to ESP8266](https://github.com/micropython/micropython/tree/master/ports/esp8266#micropython-port-to-esp8266)
