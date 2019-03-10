@@ -13,7 +13,7 @@
 #### Для ESP32
 * [MicroPython port to the ESP32](https://github.com/micropython/micropython/tree/master/ports/esp32#micropython-port-to-the-esp32)
 * [ESP-IDF](https://github.com/espressif/esp-idf#developing-with-esp-idf)
-* [Toolchain](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/linux-setup.html)
+* [Xtensa Toolchain для ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/linux-setup.html)
 
 А так же ```esptool.py```.
 * [esptool](https://github.com/espressif/esptool)
@@ -49,7 +49,7 @@ v="ESP8266"                                                     # Названи
 export PATH=$PATH:/var/data/esp-open-sdk/xtensa-lx106-elf/bin   # Расположение SDK для ESP8266
 sdk='/var/data/micropython/ports/esp8266'                       # Расположение MicroPython для ESP8266
 ```
-#### Для ESP32
+##### Для ESP32
 
 ```bash
 v="ESP32"   # Название проекта
