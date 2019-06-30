@@ -1,5 +1,5 @@
 #!/bin/bash
-project=$(pwd)
+project="/var/fw"
 dt=$(date +'%Y-%m-%d-%H-%M-%S')
 v="ESP8266"
 name="$v-$dt.bin"
@@ -30,74 +30,28 @@ else
     else
         echo "###################### Make Firmware OK! #########################"
         cp $firmware $project/$name
-        echo "NAME FIRMWARE:"
-        echo "$name"
-        cd $project
-        echo "THE FIRMWARE IS LOCATED:"
-        echo "$(pwd)"
+        echo "FIRMWARE: $name"
+        #cd $project
+        #echo "THE FIRMWARE IS LOCATED:"
+        #echo "$(pwd)"
         echo "##################### FINISH MAKE FIRMWARE ########################"
     fi
 fi
 }
 
-chip_erase() {
-sleep 1
-echo "##################### ERASE FLASH ESP8266 ########################"
-esptool.py --port /dev/ttyUSB0 erase_flash
-if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR ERASE FLASH! ###########################"
-    exit 1
-fi
-}
-
-chip_write() {
-sleep 1
-echo "############# UPLOAD THE FIRMWARE INTO THE ESP8266 ###############"
-echo "UPLOAD THE FIRMWARE $name"
-esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash --flash_size=detect -fm dio 0 $name
-if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR UPLOAD THE FIRMWARE! ###########################"
-    exit 1
-fi
-echo "########################### ALL FINISH ############################"
-}
-
 case $1 in
-     "-om" )
-          cl_mk=true
+     "-m" )
+          clean_make
           ;;
-     "-mw" )
-          cl_mk=true
-          ech=true
-          wch=true
-          ;;
-     "-ow" )
-          name=$2
-          echo "UPLOAD FIRMWARE $name"
-          ech=true
-          wch=true
-          ;;
-     "--help" )
+     "-h" )
           echo "############################################ HELP ###############################################"
-          echo "$0 -om | Только сборка прошивки"
-          echo "$0 -mw | Cборка прошивки, очистка контроллера и запись новой прошивки"
-          echo "$0 -ow | Только очистка контроллера и запись прошивки, необходимо передать имя прошивки"
-          echo "$0 --help | Справка по работе со скриптом"
+          echo "$0 -m | Очистка от старых сборок и создание новой прошивки"
+          echo "$0 -h | Справка по работе со скриптом"
           echo "#################################################################################################"
           ;;
      *)
           echo "####################################################################"
-          echo "Для получения информации по работе со скриптом $0 --help"
+          echo "Для получения информации по работе со скриптом $0 -h"
           echo "####################################################################"
           ;;
-esac
-
-if $cl_mk; then clean_make 
-fi
-
-if $ech; then chip_erase 
-fi
-
-if $wch; then chip_write 
-fi
-
+esac 
