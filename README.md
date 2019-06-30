@@ -2,9 +2,9 @@
 
 ![bash-small](https://user-images.githubusercontent.com/13176091/54089754-070c6c00-4375-11e9-8495-d06e9d5f3fe3.png)
 
-Для сборки ```firmware``` для ESP32 и ESP8266 используются идентичные скрипты ```makeESP32``` и ```makeESP8266```. Скрипты различаются только параметрами передаваемыми ```esptool.py```. 
+Cборка ```firmware``` для ESP32 и ESP8266 выполняется в Docker где используются идентичные скрипты ```make.sh```. Скрипты различаются только параметрами передаваемыми ```esptool.py```.
 
-Для работы скрипта, необходимо:
+Для сборки Docker, необходимо:
 
 #### Для ESP8266
 * [MicroPython port to ESP8266](https://github.com/micropython/micropython/tree/master/ports/esp8266#micropython-port-to-esp8266)
@@ -15,48 +15,47 @@
 * [ESP-IDF](https://github.com/espressif/esp-idf#developing-with-esp-idf)
 * [Xtensa Toolchain для ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/linux-setup.html)
 
-А так же ```esptool.py```.
-* [esptool](https://github.com/espressif/esptool)
+А так же ```esptool.py``` и ```setuptools```.
 
+#### Сборка Docker для ESP8266
 ```bash
-pip3 install setuptools
-pip3 install esptool
+git clone https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython.git
+cd esp8266
+docker build -t esp8266:sdk .
 ```
+#### Сборка Docker для ESP32
+* На данный момент ```Dockerfile``` для сборки ```Docker`` не создан, планируется создать в будущем
+В настоящее время можно использовать версию [v1](https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython/tree/v1) скриптов для сборки и прошивки ESP32
 
-#### Использование
+#### Использование для ESP8266
+
 ```bash
+docker run -it --name esp8266 --rm -v $(pwd):/var/fw esp8266:sdk
+
+make.sh -h
+
 ############################################ HELP ###############################################
-./makeESP32 -om | Только сборка прошивки
-./makeESP32 -mw | Cборка прошивки, очистка контроллера и запись новой прошивки
-./makeESP32 -ow | Только очистка контроллера и запись прошивки, необходимо передать имя прошивки
-./makeESP32 --help | Справка по работе со скриптом
+/usr/local/bin/make.sh -m | Очистка от старых сборок и создание новой прошивки
+/usr/local/bin/make.sh -h | Справка по работе со скриптом
 #################################################################################################
+
 ```
+Для записи прошивки используется скрипт ```write_erase.sh```
+
 ```bash
+./write_erase.sh -h
+
 ############################################ HELP ###############################################
-./makeESP8266 -om | Только сборка прошивки
-./makeESP8266 -mw | Cборка прошивки, очистка контроллера и запись новой прошивки
-./makeESP8266 -ow | Только очистка контроллера и запись прошивки, необходимо передать имя прошивки
-./makeESP8266 --help | Справка по работе со скриптом
+./write_erase.sh -i  | Информация о контроллере
+./write_erase.sh -oe | Только очистка контроллера
+./write_erase.sh -ow | Только прошивка, необходимо передать имя прошивки
+./write_erase.sh -ew | Очистка контроллера и запись новой прошивки, необходимо передать имя прошивки
+./write_erase.sh -h  | Справка по работе со скриптом
 #################################################################################################
+
 ```
-Скрипт необходимо разместить в директории проекта. Выполнить настройки скрипта, по описанию ниже. После чего запустить скрипт, например: ```./makeESP8266 -mw```.
+Скрипт необходимо разместить в директории проекта. Выполнить настройки скрипта, по описанию ниже. После чего запустить скрипт, например: ```./write_erase.sh```.
 
-Для настройки скрипта необходимо отредактировать:
-
-##### Для ESP8266
-
-```bash
-v="ESP8266"                                                     # Название проекта
-export PATH=$PATH:/var/data/esp-open-sdk/xtensa-lx106-elf/bin   # Расположение SDK для ESP8266
-sdk='/var/data/micropython/ports/esp8266'                       # Расположение MicroPython для ESP8266
-```
-##### Для ESP32
-
-```bash
-v="ESP32"   # Название проекта
-export ESPIDF=/var/data/esp-idf                     # Расположение ESP-IDF
-export PATH=$PATH:/var/data/xtensa-esp32-elf/bin    # Расположение Toolchain для ESP32
-sdk='/var/data/micropython/ports/esp32'             # Расположение MicroPython для ESP32
-```
-
+#### Использование для ESP32
+На данный момент скрипты для сборки прошивки для ESP32 не созданы. Планируется создать их в будущем.
+В настоящее время можно использовать версию [v1](https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython/tree/v1) скриптов для сборки и прошивки ESP32
