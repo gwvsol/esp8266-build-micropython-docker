@@ -24,7 +24,7 @@ cd esp8266
 docker build -t esp8266:sdk .
 ```
 #### Сборка Docker для ESP32
-* На данный момент ```Dockerfile``` для сборки ```Docker`` не создан, планируется создать в будущем
+* На данный момент ```Dockerfile``` для сборки ```Docker``` не создан, планируется создать в будущем
 
 В настоящее время можно использовать версию [v1](https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython/tree/v1) скриптов для сборки и прошивки ESP32
 
