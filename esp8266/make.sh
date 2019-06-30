@@ -11,7 +11,7 @@ sdk='/var/data/micropython/ports/esp8266'
 firmware='build/firmware-combined.bin'
 
 # Очистка и сборка новой прошивки, если на каком-то шаге ошибка дальше не продолжается работа
-clean_make() {
+make_fw() {
 cd $sdk
 echo "######################### CLEAN SDK ##############################"
 sleep 3
@@ -41,7 +41,7 @@ fi
 
 case $1 in
      "-m" )
-          clean_make
+          make_fw
           ;;
      "-h" )
           echo "############################################ HELP ###############################################"
