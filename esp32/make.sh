@@ -20,6 +20,7 @@ clean_project() {
         exit 1
     else
         echo "################### Clean Old project OK! ########################"
+    fi
 }
 
 # Сборка новой прошивки
@@ -38,7 +39,6 @@ make_project() {
         echo "$NAME"
         echo "##################### FINISH MAKE FIRMWARE ########################"
     fi
-fi
 }
 
 case $1 in
