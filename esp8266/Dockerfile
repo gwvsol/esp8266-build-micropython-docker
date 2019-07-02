@@ -16,8 +16,13 @@ RUN apt update && \
 # Копируем скрипт установки переменных окружения и запуска оболочки bash
 COPY boot.sh boot.sh
 RUN chmod +x boot.sh && mv boot.sh /usr/local/bin/
+# Копируем скрипт сборки прошивки и очистки проекта
+COPY make.sh make.sh
+RUN chmod +x make.sh && mv make.sh /usr/local/bin/
 # Создаем нового не привилигированного пользователя для работы с sdk
 RUN useradd -rm -d /var/data -s /bin/bash -g root -G sudo -u 1000 work
+# Даем разрешение новому пользователю для работы со скриптом вычисления make.sh
+RUN chown work:root /usr/local/bin/make.sh
 # Изменяем пользователя
 USER work
 WORKDIR /var/data
