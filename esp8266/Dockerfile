@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 LABEL maintainer="Mikhail Fedorov" email="gwvsol@gmail.com"
 LABEL version="latest"
-# Устанавливаем временную зону (необходима для пакета unrar-free)
+# Устанавливаем временную зону
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Устанавливаем необходимые пакеты и зависимости
