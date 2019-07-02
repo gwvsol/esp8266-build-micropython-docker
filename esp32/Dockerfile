@@ -1,13 +1,17 @@
 FROM ubuntu:18.04
 LABEL maintainer="Mikhail Fedorov" email="gwvsol@gmail.com"
 LABEL version="latest"
+# Устанавливаем переменные для скачивания toolchain сборки
 ENV URL=https://dl.espressif.com/dl
 ENV ARCH=xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz
+# Устанавливаем временную зону
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Устанавливаем необходимые пакеты и зависимости
 RUN apt update && \
     apt upgrade -y && \
     apt install -y git gcc git wget \
-    make libncurses-dev flex bison gperf \
+    make libncurses-dev flex bison gperf tzdata \
     python python-setuptools \
     python3 python3-pip python3-setuptools \
     python-serial python-cryptography python-future \
