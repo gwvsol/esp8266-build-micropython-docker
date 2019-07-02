@@ -33,7 +33,7 @@ make_project() {
         exit 1
     else
         echo "###################### Make Firmware OK! #########################"
-        cp $FIRMVARE $PROJECT/$NAME
+        cp $FIRMWARE $PROJECT/$NAME
         echo "NAME FIRMWARE:"
         echo "$NAME"
         echo "##################### FINISH MAKE FIRMWARE ########################"
