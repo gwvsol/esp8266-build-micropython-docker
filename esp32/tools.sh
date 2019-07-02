@@ -4,7 +4,7 @@ if [ -z $3 ] ; then n="0"
     else n=$3
 fi
 
-V="ESP32"                         # Изменяемый параметр
+V="ESP32"                           # Изменяемый параметр
 ESPTOOL="/usr/local/bin/esptool.py" # Изменяемый параметр
 PYTHON="/usr/bin/python3 -m"        # Изменяемый параметр
 SERIAL="serial.tools.miniterm"      # Изменяемый параметр
