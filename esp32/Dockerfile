@@ -38,7 +38,7 @@ WORKDIR /var/data
 # Клонируем репозитории micropython, esp-idf и скачиваем toolchain для сборки прошивки
 RUN git clone https://github.com/micropython/micropython.git && \
     /var/temp/hash.sh && cat /var/temp/hash && \
-    git clone https://github.com/espressif/esp-idf.git && cd esp-idf && \
+    git clone -b release/v3.3 https://github.com/espressif/esp-idf.git && cd esp-idf && \
     git checkout $(cat /var/temp/hash) && git submodule update --init --recursive && \
     cd /var/data && ln -s micropython/ports/esp32 . && \
     wget $URL/$ARCH && tar -xzf $ARCH && rm $ARCH && cd micropython && \

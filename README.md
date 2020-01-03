@@ -12,7 +12,7 @@ Cборка ```FIRMWARE``` для ESP32 и ESP8266 выполняется в Doc
 
 #### Для ESP32
 * [MicroPython port to the ESP32](https://github.com/micropython/micropython/tree/master/ports/esp32#micropython-port-to-the-esp32)
-* [ESP-IDF](https://github.com/espressif/esp-idf#developing-with-esp-idf)
+* [ESP-IDF](https://github.com/espressif/esp-idf#developing-with-esp-idf) - используется ```v3.3```, так как ```v.4x``` еще ```beta```
 * [Xtensa Toolchain для ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/linux-setup.html)
 
 А так же ```esptool.py``` и ```setuptools```.
