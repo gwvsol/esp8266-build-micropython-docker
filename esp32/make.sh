@@ -6,7 +6,7 @@ NAME="$V-$DT.bin"
 export ESPIDF=/var/data/esp-idf
 export PATH=$PATH:/var/data/xtensa-esp32-elf/bin
 SDK='/var/data/micropython/ports/esp32'
-FIRMVARE='build/firmware.bin'
+FIRMVARE='build-GENERIC/firmware.bin'
 
 # Очистка и сборка новой прошивки, если на каком-то шаге ошибка дальше не продолжается работа
 # Очистка
