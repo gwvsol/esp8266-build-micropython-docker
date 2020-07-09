@@ -38,14 +38,18 @@ Cборка ```FIRMWARE``` для ESP32 и ESP8266 выполняется в Doc
 #### Сборка Docker для ESP8266
 ```bash
 git clone https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython.git
+
 cd esp8266
+
 docker build -t esp8266:sdk .
 ```
 #### Сборка Docker для ESP32
 ```bash
 git clone https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython.git
-cd esp32
-docker build -t esp32:sdk .
+
+cd ESP8266-ESP32-Script-to-build-MicroPython/esp32
+
+make build
 ```
 
 #### Использование
@@ -55,7 +59,9 @@ docker run -it --name esp8266 --rm -v $(pwd):/var/fw esp8266:sdk
 
 или
 
-docker run -it --name esp32 --rm -v $(pwd):/var/fw esp32:sdk
+cd ESP8266-ESP32-Script-to-build-MicroPython/esp32
+
+make start 
 ```
 
 ##### Работа со скриптом сборки
@@ -89,9 +95,7 @@ make.sh -h
 #################################################################################################
 
 ```
-Скрипт необходимо разместить в директории проекта. Для работы монитора порта UART необходим установить ```pyserial```
+Скрипт ```tools.sh``` необходимо разместить в директории проекта.   
+Для работы монитора порта UART необходим установить ```pyserial```  
 
-```bash
-pip3 install pyserial
-```
 ***
