@@ -15,7 +15,25 @@ Cборка ```FIRMWARE``` для ESP32 и ESP8266 выполняется в Doc
 * [ESP-IDF](https://github.com/espressif/esp-idf#developing-with-esp-idf) - используется ```v3.3```, так как ```v.4x``` еще ```beta```
 * [Xtensa Toolchain для ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/linux-setup.html)
 
-А так же ```esptool.py``` и ```setuptools```.
+Кроме указанных выше зависимостей необходимо установить:    
+*Для работы с микроконтроллерами*  
+* [esptool GitHub](https://github.com/espressif/esptool)  
+  [esptool PyPI](https://pypi.org/project/esptool/)  
+  ```bash
+  pip3 install esptool
+  ```
+* [setuptools PyPI](https://pypi.org/project/setuptools/)  
+  ```bash
+  pip3 install setuptools
+  ```
+*Для работы монитора порта UART необходим установить*     
+* [pySerial PyPI](https://pypi.org/project/pyserial/)  
+  [pySerial GitHub](https://github.com/pyserial/pyserial)  
+  [pySerial Documentation](https://pyserial.readthedocs.io/en/latest/shortintro.html)   
+  ```bash
+  pip3 install pyserial
+  ```
+
 
 #### Сборка Docker для ESP8266
 ```bash
