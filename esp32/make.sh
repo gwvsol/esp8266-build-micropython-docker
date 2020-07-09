@@ -1,12 +1,12 @@
 #!/bin/bash
-PROJECT='/var/fw'
+PROJECT="$HOME/firmware"
 DT=$(date +'%Y-%m-%d-%H-%M-%S')
-V="ESP32"
+V="esp32"
 NAME="$V-$DT.bin"
-export ESPIDF=/var/data/esp-idf
-export PATH=$PATH:/var/data/xtensa-esp32-elf/bin
-SDK='/var/data/micropython/ports/esp32'
-FIRMVARE='build-GENERIC/firmware.bin'
+export ESPIDF=$HOME/esp-idf
+export PATH=$PATH:$HOME/xtensa-esp32-elf/bin
+SDK="$HOME/micropython/ports/esp32"
+FIRMVARE="build-GENERIC/firmware.bin"
 
 # Очистка и сборка новой прошивки, если на каком-то шаге ошибка дальше не продолжается работа
 # Очистка
@@ -42,16 +42,11 @@ make_project() {
 }
 
 case $1 in
-    "-c" )
+    "-c" ) clean_project ;;
+    "-m" ) make_project ;;
+    "-cm" ) 
         clean_project
-        ;;
-    "-m" )
-        make_project
-        ;;
-    "-cm" )
-        clean_project
-        make_project
-        ;;
+        make_project ;;
     "-h" )
         echo "#################### HELP ##########################################"
         echo "$0 -c  | Очистка SDK"
