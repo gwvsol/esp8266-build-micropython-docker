@@ -38,3 +38,8 @@ build:
 	--tag ${SOURCE}:latest ./
 
 start: 
+	docker run \
+	-it --name ${SOURCE} \
+	--rm \
+	--volume ${PWD}:/home/${USER}/firmware \
+	${SOURCE}:latest
