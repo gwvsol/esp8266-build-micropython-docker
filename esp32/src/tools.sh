@@ -3,7 +3,7 @@
 if [ -z $3 ] ; then n="0"
     else n=$3
 fi
-
+# ls firmware/ | grep bin | tail -n 1
 V="ESP32"                           # Изменяемый параметр
 ESPTOOL="/usr/local/bin/esptool.py" # Изменяемый параметр
 PYTHON="/usr/bin/python3 -m"        # Изменяемый параметр
@@ -11,12 +11,20 @@ SERIAL="serial.tools.miniterm"      # Изменяемый параметр
 SERIAL_SPEED=115200                 # Изменяемый параметр
 SERIAL_PORT="/dev/ttyUSB$n"         # Изменяемый параметр
 UPLOAD_SPEED=460800                 # Изменяемый параметр
+FIRMWAREDIR=firmware
+MINICOM="/usr/bin/minicom"
 
 # Moнитор порта UART
-monitor_board() {
+monitor_pyserial() {
 sleep 1
-echo "########################## MONITOR UART $V ###########################"
+echo "###################### MONITOR UART $V PySerial ######################"
 $PYTHON $SERIAL $SERIAL_PORT $SERIAL_SPEED
+}
+
+monitor_minicom() {
+    sleep 1
+    echo "####################### MONITOR UART $V Minicom ######################"
+    $MINICOM usb
 }
 
 # Flash ID
@@ -90,6 +98,22 @@ fi
 echo "########################### ALL FINISH ############################"
 }
 
+# Запись последней скомпилированной прошивки
+latest_write() {
+    # Получаем информацию где запушен скрипт
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    # Получаем информацию о последней директории
+    LATEST=$(echo $DIR | awk -F'/' '{print $NF}')
+    # Получаем информацию о родительской диретории
+    HOMEDIR=$(echo $DIR | sed "s/$LATEST//g")
+    # Получаем информацию о последней прошивке в диретории
+    FIRMWARE=$(ls $HOMEDIR/$FIRMWAREDIR | grep bin | tail -n 1)
+    # Формируем путь к последней прошивке
+    FIRMWARE="$FIRMWAREDIR/$FIRMWARE"
+    # Записываем последнюю прошивку в микроконтроллер
+    chip_write
+}
+
 case $1 in
     "-i" )
           id_board       # Chip ID
@@ -108,20 +132,28 @@ case $1 in
           echo "UPLOAD FIRMWARE $FIRMWARE"
           chip_write
           ;;
+    "-lw" )
+          latest_write
+          ;;
     "-ew" )
           FIRMWARE=$2    # Очистка чипа и запись прошивки
           chip_erase     # Очистка чипа
           echo "UPLOAD FIRMWARE $FIRMWARE"
           chip_write     # Запись прошивки
           ;;
-    "-m" )
-          monitor_board  # Moнитор порта UART
+    "-mpy" )
+          monitor_pyserial  # Moнитор порта UART
+          ;;
+    "-mcm" )
+          monitor_minicom  # Moнитор порта UART
           ;;
     "-h" )
           echo "############################################ HELP ###############################################"
-          echo "$0 -m   | Moнитор порта UART"
+          echo "$0 -mpy | Moнитор порта UART PySerial"
+          echo "$0 -mcm | Moнитор порта UART Minicom"
           echo "$0 -e   | Очистка $V"
           echo "$0 -w   | Только запись прошивки, необходимо передать имя прошивки"
+          echo "$0 -lw  | Запись последней скомпилированной прошивки"
           echo "$0 -ew  | Очистка $V и запись новой прошивки, необходимо передать имя прошивки"
           echo "$0 -i   | Информация об ID $V"
           echo "$0 -if  | ID Flash $V"
