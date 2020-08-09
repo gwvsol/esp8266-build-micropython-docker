@@ -29,9 +29,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN groupadd --gid ${GROUP_ID} $USER \
   && useradd --uid ${USER_ID} --gid $USER --shell $SHELL --create-home $USER
 # Устанавливаем необходимые пакеты и зависимости
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y git gcc git wget \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git gcc git wget \
     make libncurses-dev flex bison gperf tzdata \
     python python-setuptools \
     python3 python3-pip python3-setuptools \
@@ -39,15 +39,17 @@ RUN apt update && \
     python3-serial python3-cryptography python3-future && \
     pip3 install pyserial pyparsing
 # Копируем скрипт сборки прошивки и очистки проекта
-COPY make.sh make.sh
-RUN chmod +x make.sh && mv make.sh /usr/local/bin/
+COPY src/make_fw.sh make_fw.sh
+RUN chmod +x make_fw.sh && mv make_fw.sh /usr/local/bin/
+COPY src/Makefile Makefile
+RUN mv Makefile $HOME_DIR && chown $USER:$USER $HOME_DIR/Makefile
 # Создаем времнную папку для скрипта вычисления hash и копируем ее
 # RUN mkdir /var/temp
-COPY hash.sh /tmp/hash.sh
+COPY src/hash.sh /tmp/hash.sh
 # Даем разрешение новому пользователю для работы со скриптом вычисления hash
 RUN chown -R $USER:$USER /tmp/hash.sh && chmod +x /tmp/hash.sh
-# Даем разрешение новому пользователю для работы со скриптом вычисления make.sh
-RUN chown $USER:$USER /usr/local/bin/make.sh
+# Даем разрешение новому пользователю для работы со скриптом вычисления make_fw.sh
+RUN chown $USER:$USER /usr/local/bin/make_fw.sh
 # Изменяем пользователя
 USER $USER
 WORKDIR $HOME_DIR
