@@ -1,19 +1,14 @@
-## Build MicroPython for ESP8266 and ESP32 in Docker
+## Build MicroPython for ESP8266 in Docker
 
 ![bash-small](https://user-images.githubusercontent.com/13176091/54089754-070c6c00-4375-11e9-8495-d06e9d5f3fe3.png)
 
-Cборка ```FIRMWARE``` для ESP32 и ESP8266 выполняется в Docker где используются идентичные скрипты ```make.sh```. Скрипты различаются только параметрами передаваемыми ```esptool```.
+Cборка ```FIRMWARE``` ESP8266 выполняется в Docker где используются скрипт ```make.sh```.   
 
 Для сборки Docker, необходимо:
 
 #### Для ESP8266
 * [MicroPython port to ESP8266](https://github.com/micropython/micropython/tree/master/ports/esp8266#micropython-port-to-esp8266)
-* [SDK for ESP8266/ESP8285 chips](https://github.com/pfalcon/esp-open-sdk)
-
-#### Для ESP32
-* [MicroPython port to the ESP32](https://github.com/micropython/micropython/tree/master/ports/esp32#micropython-port-to-the-esp32)
-* [ESP-IDF](https://github.com/espressif/esp-idf#developing-with-esp-idf) - используется ```v3.3```, так как ```v.4x``` еще ```beta```
-* [Xtensa Toolchain для ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/linux-setup.html)
+* [SDK for ESP8266/ESP8285 chips](https://github.com/pfalcon/esp-open-sdk)   
 
 Кроме указанных выше зависимостей необходимо установить:    
 *Для работы с микроконтроллерами*  
@@ -43,25 +38,12 @@ cd esp8266
 
 docker build -t esp8266:sdk .
 ```
-#### Сборка Docker для ESP32
-```bash
-git clone https://github.com/gwvsol/ESP8266-ESP32-Script-to-build-MicroPython.git
-
-cd ESP8266-ESP32-Script-to-build-MicroPython/esp32
-
-make build
-```
 
 #### Использование
 
 ```bash
 docker run -it --name esp8266 --rm -v $(pwd):/var/fw esp8266:sdk
 
-или
-
-cd ESP8266-ESP32-Script-to-build-MicroPython/esp32
-
-make start 
 ```
 
 ##### Работа со скриптом сборки
@@ -85,12 +67,12 @@ make.sh -h
 
 ############################################ HELP ###############################################
 ./tools.sh -m   | Moнитор порта UART
-./tools.sh -e   | Очистка ESP32
+./tools.sh -e   | Очистка ESP8266
 ./tools.sh -w   | Только запись прошивки, необходимо передать имя прошивки
-./tools.sh -ew  | Очистка ESP32 и запись новой прошивки, необходимо передать имя прошивки
-./tools.sh -i   | Информация об ID ESP32
-./tools.sh -if  | ID Flash ESP32
-./tools.sh -mac | MAC адрес ESP32
+./tools.sh -ew  | Очистка ESP8266 и запись новой прошивки, необходимо передать имя прошивки
+./tools.sh -i   | Информация об ID ESP8266
+./tools.sh -if  | ID Flash ESP8266
+./tools.sh -mac | MAC адрес ESP8266
 ./tools.sh -h   | Справка по работе со скриптом
 #################################################################################################
 
