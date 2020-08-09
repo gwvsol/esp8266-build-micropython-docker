@@ -41,5 +41,6 @@ start:
 	docker run \
 	-it --name ${SOURCE} \
 	--rm \
-	--volume ${PWD}:/home/${USER}/firmware \
+	--volume ${PWD}/firmware:/home/${USER}/firmware \
+	--volume ${PWD}/modules:/home/${USER}/modules \
 	${SOURCE}:latest
