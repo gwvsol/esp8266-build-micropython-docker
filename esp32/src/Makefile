@@ -2,7 +2,7 @@
 
 #===================================================
 BIN=/usr/local/bin
-SCRIPT=make_fw.sh
+SCRIPT=make.sh
 #===================================================
 
 .DEFAULT: help
@@ -20,5 +20,6 @@ modules: ${BIN}/${SCRIPT}
 	${BIN}/${SCRIPT} -cp
 
 build: ${BIN}/${SCRIPT}
+	make modules
 	${BIN}/${SCRIPT} -cb
 
