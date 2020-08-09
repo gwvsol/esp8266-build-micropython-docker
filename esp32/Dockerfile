@@ -39,8 +39,8 @@ RUN apt-get update && \
     python3-serial python3-cryptography python3-future && \
     pip3 install pyserial pyparsing
 # Копируем скрипт сборки прошивки и очистки проекта
-COPY src/make_fw.sh make_fw.sh
-RUN chmod +x make_fw.sh && mv make_fw.sh /usr/local/bin/
+COPY src/make.sh make.sh
+RUN chmod +x make.sh && mv make.sh /usr/local/bin/
 COPY src/Makefile Makefile
 RUN mv Makefile $HOME_DIR && chown $USER:$USER $HOME_DIR/Makefile
 # Создаем времнную папку для скрипта вычисления hash и копируем ее
@@ -48,8 +48,8 @@ RUN mv Makefile $HOME_DIR && chown $USER:$USER $HOME_DIR/Makefile
 COPY src/hash.sh /tmp/hash.sh
 # Даем разрешение новому пользователю для работы со скриптом вычисления hash
 RUN chown -R $USER:$USER /tmp/hash.sh && chmod +x /tmp/hash.sh
-# Даем разрешение новому пользователю для работы со скриптом вычисления make_fw.sh
-RUN chown $USER:$USER /usr/local/bin/make_fw.sh
+# Даем разрешение новому пользователю для работы со скриптом вычисления make.sh
+RUN chown $USER:$USER /usr/local/bin/make.sh
 # Изменяем пользователя
 USER $USER
 WORKDIR $HOME_DIR
