@@ -52,7 +52,7 @@ build_project() {
     else
         echo "$CYAN####################### Make Firmware OK! #########################$NORMAL"
         cp $FIRMVARE_SDK $FIRMVARE/$NAME
-        echo "$CYANNAMEFIRMWARE: $NAME$NORMAL"
+        echo "NAMEFIRMWARE: $NAME"
         echo "$CYAN##################### FINISH MAKE FIRMWARE ########################$NORMAL"
     fi
 }
