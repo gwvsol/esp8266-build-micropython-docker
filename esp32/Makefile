@@ -25,7 +25,7 @@ help:
 	@echo "make start	- Start of Docker"
 	@echo "make stop	- Stopping Docker"
 	@echo "make remove	- Deleting a Docker image"
-	@echo "make pyserial - Monitoring the operation of the microcontroller via pyserial"
+	@echo "make pyserial	- Monitoring the operation of the microcontroller via pyserial"
 	@echo "make minicom	- Monitoring the operation of the microcontroller via minicon"
 	@echo "make get-mac	- Getting the Mac address of the microcontroller"
 	@echo "make get-id	- Getting the microcontroller ID"
