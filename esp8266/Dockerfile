@@ -1,6 +1,14 @@
 FROM ubuntu:18.04
 LABEL maintainer="Mikhail Fedorov" email="gwvsol@gmail.com"
 LABEL version="latest"
+ARG USER
+ARG USER_ID
+ARG GROUP_ID
+# Переменная оболочки 
+ENV SHELL=/bin/bash
+# Домашняя диретория пользователя
+ENV HOME_DIR=/home/${USER}
+ENV PATH=$PATH:${HOME_DIR}/esp-open-sdk/xtensa-lx106-elf/bin
 # Устанавливаем временную зону
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -13,24 +21,23 @@ RUN apt update && \
     flex bison texinfo gawk libncurses5-dev libexpat1-dev \
     sed git help2man wget unzip bzip2 unrar-free && \
     pip3 install setuptools && pip3 install esptool
-# Копируем скрипт установки переменных окружения и запуска оболочки bash
-COPY boot.sh boot.sh
-RUN chmod +x boot.sh && mv boot.sh /usr/local/bin/
 # Копируем скрипт сборки прошивки и очистки проекта
-COPY make.sh make.sh
+COPY src/make.sh make.sh
 RUN chmod +x make.sh && mv make.sh /usr/local/bin/
+COPY src/Makefile Makefile
 # Создаем нового не привилигированного пользователя для работы с sdk
-RUN useradd -rm -d /var/data -s /bin/bash -g root -G sudo -u 1000 work
+RUN groupadd --gid ${GROUP_ID} $USER \
+  && useradd --uid ${USER_ID} --gid $USER --shell $SHELL --create-home $USER
 # Даем разрешение новому пользователю для работы со скриптом вычисления make.sh
-RUN chown work:root /usr/local/bin/make.sh
+RUN chown $USER:$USER /usr/local/bin/make.sh
 # Изменяем пользователя
-USER work
-WORKDIR /var/data
+USER $USER
+WORKDIR $HOME_DIR
 # Клонируем репозитории micropython, скачиваем esp-open-sdk и собираем toolchain для сборки прошивки
 RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git && \
-    cd esp-open-sdk && make STANDALONE=y && cd /var/data && \
+    cd esp-open-sdk && make STANDALONE=y && cd $HOME_DIR && \
     git clone https://github.com/micropython/micropython.git && \
     ln -s micropython/ports/esp8266 . && cd micropython && \
     git submodule update --init && make -C mpy-cross && exit && \
-    ln -s /var/data/micropython/mpy-cross/mpy-cross /usr/local/bin/
-ENTRYPOINT ["boot.sh"]
+    ln -s $HOME_DIR/micropython/mpy-cross/mpy-cross /usr/local/bin/
+ENTRYPOINT ["/bin/bash"]
