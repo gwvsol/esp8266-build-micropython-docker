@@ -1,67 +1,81 @@
 #!/bin/bash
 PROJECT="/var/fw"
-DT=$(date +'%Y-%m-%d-%H-%M-%S')
-V="ESP8266"
-NAME="$V-$DT.bin"
+DATETIME=$(date +'%Y-%m-%d-%H-%M-%S')
+VER="esp8266"
+NAME="$VER-$DATETIME.bin"
 export PATH=$PATH:/var/data/esp-open-sdk/xtensa-lx106-elf/bin
-SDK='/var/data/micropython/ports/esp8266'
-FIRMWARE='build/firmware-combined.bin'
+SDK="$HOME/micropython/ports/esp8266"
+FIRMVARE_SDK="build/firmware-combined.bin"
+FIRMVARE="$HOME/firmware"
+MODULES_SDK="$SDK/modules"
+MODULES_FW="$HOME/modules"
+#===============================
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+#===============================
 
 # Очистка и сборка новой прошивки, если на каком-то шаге ошибка дальше не продолжается работа
 # Очистка
 clean_project() {
     cd $SDK
-    echo "######################### CLEAN SDK $V ##############################"
+    echo "$CYAN######################### CLEAN SDK $VER ##############################$NORMAL"
     sleep 2
     make clean
     if [[ $? -ne 0 ]]; then
-        echo "######################## Error Clean! ###########################"
+        echo "$RED######################## Error Clean! ###########################$NORMAL"
         exit 1
     else
-        echo "################### Clean Old project OK! ########################"
+        echo "$CYAN################### Clean Old project OK! ########################$NORMAL"
     fi
 }
 
+# Копирование исходного кода для компиляции
+copy_modules() {
+    cd $MODULES_FW
+    echo "$CYAN################### COPYING THE SOURCE CODE #######################$NORMAL"
+    find ./ -type f ! -name "*.md" -exec cp --parents -r -t $MODULES_SDK "{}" \+
+    ls -l $MODULES_SDK
+    echo "$CYAN############# COPYING THE SOURCE CODE IS COMPLETE #################$NORMAL"
+}
+
 # Сборка новой прошивки
-make_project() {
+build_project() {
     cd $SDK   
-    echo "######################## MAKE PROJECT $V ############################"
+    echo "$CYAN######################## MAKE PROJECT $VER ############################$NORMAL"
     sleep 2
     make
     if [[ $? -ne 0 ]]; then
-        echo "###################### Error Make Firmware! ##########################"
+        echo "$RED###################### Error Make Firmware! ##########################$NORMAL"
         exit 1
     else
-        echo "###################### Make Firmware OK! #########################"
-        cp $FIRMWARE $PROJECT/$NAME
-        echo "NAME FIRMWARE:"
-        echo "$NAME"
-        echo "##################### FINISH MAKE FIRMWARE ########################"
+        echo "$CYAN###################### Make Firmware OK! #########################$NORMAL"
+        cp $FIRMVARE_SDK $FIRMVARE/$NAME
+        echo "NAMEFIRMWARE: $NAME"
+        echo "$CYAN##################### FINISH MAKE FIRMWARE ########################$NORMAL"
     fi
 }
 
 case $1 in
-    "-c" )
+    "-c" ) clean_project ;;
+    "-cp" ) copy_modules ;;
+    "-b" ) build_project ;;
+    "-cb" )
         clean_project
-        ;;
-    "-m" )
-        make_project
-        ;;
-    "-cm" )
-        clean_project
-        make_project
-        ;;
+        copy_modules
+        build_project ;;
     "-h" )
-        echo "#################### HELP ##########################################"
+        echo "$GREEN#################### HELP ##########################################"
         echo "$0 -c  | Очистка SDK"
-        echo "$0 -m  | Cборка прошивки"
-        echo "$0 -cm | Очистка SDK и сборка прошивки"
+        echo "$0 -b  | Cборка прошивки"
+        echo "$0 -bm | Очистка SDK и сборка прошивки"
         echo "$0 -h  | Справка по работе со скриптом"
-        echo "####################################################################"
+        echo "####################################################################$NORMAL"
         ;;
     *)
-        echo "####################################################################"
+        echo "$GREEN####################################################################"
         echo "Для получения информации по работе со скриптом $0 -h"
-        echo "####################################################################"
+        echo "####################################################################$NORMAL"
         ;;
 esac
