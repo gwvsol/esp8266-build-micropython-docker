@@ -3,7 +3,7 @@
 		clean release release-clean
 
 #============================================
-SOURCE=esp32sdk
+SOURCE=esp8266sdk
 SRCDIR=src
 DOCKERFILE=Dockerfile
 PWD=$(shell pwd)
