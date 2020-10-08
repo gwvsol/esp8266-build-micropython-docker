@@ -14,3 +14,4 @@ esp8266/release/*
 !esp8266/release/README.md
 *.bin
 .bash_history
+.Trash-1000
