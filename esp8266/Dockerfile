@@ -30,6 +30,7 @@ RUN groupadd --gid ${GROUP_ID} $USER \
   && useradd --uid ${USER_ID} --gid $USER --shell $SHELL --create-home $USER
 # Даем разрешение новому пользователю для работы со скриптом вычисления make.sh
 RUN chown $USER:$USER /usr/local/bin/make.sh
+RUN mv Makefile $HOME_DIR && chown $USER:$USER $HOME_DIR/Makefile
 # Изменяем пользователя
 USER $USER
 WORKDIR $HOME_DIR
