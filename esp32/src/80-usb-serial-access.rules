@@ -1,1 +1,0 @@
-SUBSYSTEMS=="usb-serial", TAG+="uaccess"
