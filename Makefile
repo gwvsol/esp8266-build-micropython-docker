@@ -1,6 +1,5 @@
-.PHONY: help build start stop remove \
-		pyserial minicom mac id upload \
-		clean release release-clean
+.PHONY: help build-img build-firmware start remove \
+		pyserial minicom id upload clean release
 
 #============================================
 DOCKER=$(shell which docker)
@@ -27,8 +26,15 @@ endif
 .DEFAULT: help
 
 help:
-	@echo "make build	- Building a Docker"
-	@echo "make start	- Start of Docker"
+	@echo "make build-img - Building a Docker"
+	@echo "make build-firmware - Firmware build for esp8266"
+	@echo "make remove - Deleting a Docker image"
+	@echo "make start - Start of Docker"
+	@echo "make info - Information about the esp8266"
+	@echo "make upload - Loading firmware to the esp8266"
+	@echo "make clean - Cleaning the esp8266"
+	@echo "make pyserial - Monitoring the operation of via pyserial"
+	@echo "make minicom - Monitoring the operation of via minicon"
 	@exit 0
 
 #============================================
@@ -42,7 +48,7 @@ pre-build: ${ESPSDK_RULESACCESS} ${ESPSDK_MINICOMCONF}
 
 #============================================
 
-build: ${DOCKER} ${ESPSDK_DOCKERFILE}
+build-img: ${DOCKER} ${ESPSDK_DOCKERFILE}
 	[ `docker images | grep ${ESPSDK} | wc -l` -eq 1 ] || \
 	docker build \
 	--file ${PWD}/${ESPSDK_DOCKERFILE} \
@@ -61,6 +67,7 @@ start: ${DOCKER} ${ESPSDK_DOCKERFILE}
 	${ESPSDK}:latest bash
 
 build-firmware: ${DOCKER} ${ESPSDK_DOCKERFILE}
+	find "$(ESPSDK_FIRMWARE)" -name '*.bin' -type f -exec mv -v -t "$(ARCHIVE)" {} +
 	[ `docker ps | grep ${ESPSDK} | wc -l` -eq 1 ] || \
 	docker run \
 	-it --name ${ESPSDK} \
@@ -78,7 +85,7 @@ release:
 	[ -d $(ARCHIVE) ] || mkdir ${ARCHIVE}
 	find "$(RELEASE)" -name '*.zip' -type f -exec mv -v -t "$(ARCHIVE)" {} +
 	find "$(ESPSDK_FIRMWARE)" -name '*.bin' -type f -exec mv -v -t "$(ARCHIVE)" {} +
-	make build-firmware
+#	make build-firmware
 	zip -r ${RELEASE}/${ESPSDK}-$(shell date '+%Y-%m-%d-%H-%M-%S').zip \
 	${README} ${MAKEFILE} ${DOCKERFILE} ${ESPSDK_SCRIPT} ${LICENSE} \
 	${ESPSDK_SRC} ${ESPSDK_FIRMWARE} ${ESPSDK_SRC}
@@ -91,7 +98,7 @@ pyserial: ${ESPSDK_TOOLS}
 minicom: ${ESPSDK_TOOLS}
 	${ESPSDK_TOOLS} --minicom
 
-id: ${ESPSDK_TOOLS}
+info: ${ESPSDK_TOOLS}
 	${ESPSDK_TOOLS} --id
 
 upload: ${ESPSDK_TOOLS}
