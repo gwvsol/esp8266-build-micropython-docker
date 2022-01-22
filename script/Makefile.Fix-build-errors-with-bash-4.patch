@@ -1,0 +1,11 @@
+--- Makefile	2022-01-21 20:58:07.012183261 +0300
++++ Makefile.Fix-build-errors-with-bash-4	2022-01-21 22:04:52.678267627 +0300
+@@ -146,7 +146,7 @@
+ 
+ _ct-ng:
+ 	./bootstrap
+-	./configure --prefix=`pwd`
++	./configure --prefix=`pwd` --with-bash=/bin/bash
+ 	$(MAKE) MAKELEVEL=0
+ 	$(MAKE) install MAKELEVEL=0
+ 
