@@ -1,6 +1,9 @@
+######################################################################
+##
+## STAGE 1: Build xtensa toolchain
+##
+
 FROM debian:buster
-LABEL maintainer="Mikhail Fedorov" email="jwvsol@yandex.ru"
-LABEL version="latest"
 
 ENV ESP_OPEN_SDK=https://github.com/pfalcon/esp-open-sdk.git
 ENV MICROPYTHON=https://github.com/micropython/micropython.git
@@ -21,17 +24,11 @@ ENV USER=${USER:-work}
 ARG USER_ID
 ENV USER_ID=${USER_ID:-1000}
 
-ARG TIMEZONE
-ENV TIMEZONE=${TIMEZONE:-Europe/Moscow}
-
 ENV SHELL=/bin/bash
 
 ENV TOOLS=tools
 
 ENV HOME_DIR=/home/${USER}
-
-RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
-    && echo $TIMEZONE > /etc/timezone
 
 RUN groupadd --gid ${USER_ID} ${USER} \
     && useradd --uid ${USER_ID} --gid ${USER} --shell ${SHELL} --create-home ${USER}
@@ -39,8 +36,8 @@ RUN groupadd --gid ${USER_ID} ${USER} \
 RUN set -eux \
     && apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y python python-dev python-serial python-pip \
-           python3 python3-dev python3-serial python3-pip \
+    && apt-get install -y python python-dev python-pip \
+           python3 python3-dev python3-pip \
            autoconf automake libtool libtool-bin gperf \
            flex bison texinfo gawk libncurses5-dev libexpat1-dev \
            sed git help2man wget unzip bzip2 unrar-free \
@@ -58,21 +55,68 @@ RUN git clone --recursive ${ESP_OPEN_SDK} ${TOOLS} \
     && wget ${NEWLIB} && wget ${NCURSES} && wget ${MPFR} \
     && wget ${MPC} && wget ${ISL} && wget ${GMP} && wget ${GBL} \
     && wget ${EXPAT} && wget ${CLOOG} && wget ${BINUTILS} && wget ${GCC}
+
 RUN cd ${HOME_DIR}/${TOOLS} \
     && patch Makefile /tmp/Makefile.Fix-build-errors-with-bash-4.patch \
     && make STANDALONE=y
+
 RUN cd ${HOME_DIR} \
     && git clone ${MICROPYTHON} \
     && ln -s micropython/ports/esp8266 . \
     && cd micropython \
-    && git submodule update --init \
-RUN make -C mpy-cross
+    && make -C mpy-cross
 
-USER root
-RUN ln -s ${HOME_DIR}/micropython/mpy-cross/mpy-cross /usr/local/bin/ \
-    && cp -a ${HOME_DIR}/${TOOLS}/xtensa-lx106-elf /usr/local/ \
-    && rm -fr ${HOME_DIR}/${TOOLS}
+######################################################################
+##
+## STAGE 2: This is the final image
+##
+
+FROM debian:buster
+LABEL maintainer="Mikhail Fedorov" email="jwvsol@yandex.ru"
+LABEL version="latest"
+
+ENV MICROPYTHON=https://github.com/micropython/micropython.git
+
+ARG USER
+ENV USER=${USER:-work}
+ARG USER_ID
+ENV USER_ID=${USER_ID:-1000}
+
+ENV TOOLS=tools
+
+ARG TIMEZONE
+ENV TIMEZONE=${TIMEZONE:-Europe/Moscow}
+
+ENV SHELL=/bin/bash
+ENV HOME_DIR=/home/${USER}
+
+RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+    && echo $TIMEZONE > /etc/timezone
+
+RUN groupadd --gid ${USER_ID} ${USER} \
+    && useradd --uid ${USER_ID} --gid ${USER} --shell ${SHELL} --create-home ${USER}
+
+RUN set -eux \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y python python3 python3-pip \
+           python-serial python3-serial autoconf automake \
+           git libtool libtool-bin && pip3 install esptool
+
+COPY --from=0 ${HOME_DIR}/${TOOLS}/xtensa-lx106-elf /usr/local/xtensa-lx106-elf
+COPY --from=0 ${HOME_DIR}/micropython/mpy-cross/mpy-cross /usr/local/bin/mpy-cross
+COPY script/build.sh /usr/local/bin/
+COPY script/entrypoint.sh /usr/local/bin/
+
 ENV PATH=/usr/local/xtensa-lx106-elf/bin:$PATH
-USER ${USER}
 
-ENTRYPOINT ["/bin/bash"]
+USER ${USER}
+WORKDIR ${HOME_DIR}
+
+RUN cd ${HOME_DIR} \
+    && git clone ${MICROPYTHON} \
+    && ln -s micropython/ports/esp8266 . \
+    && cd micropython \
+    && git submodule update --init
+
+ENTRYPOINT ["entrypoint.sh"]
