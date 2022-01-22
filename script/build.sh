@@ -1,0 +1,63 @@
+#!/bin/bash
+
+DATETIME=$(date +'%Y-%m-%d-%H-%M-%S')
+NAME="esp8266-$DATETIME.bin"
+export PATH=$PATH:/usr/local/xtensa-lx106-elf/bin
+MICROPYTHON="$HOME/micropython/ports/esp8266"
+FIRMWARE="build-GENERIC/firmware-combined.bin"
+FIRMWARE_DIR="$HOME/firmware"
+MICROPYTHON_MODULES="$MICROPYTHON/modules"
+MICROPYTHON_SRC="$HOME/modules"
+#===============================
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+#===============================
+
+# Очистка
+clean() {
+    cd $MICROPYTHON
+    echo "$CYAN###################### CLEAN SDK esp8266 ########################$NORMAL"
+    sleep 2
+    make clean
+    if [[ $? -ne 0 ]]; then
+        echo "$RED###################### Error Clean! #############################$NORMAL"
+        exit 1
+    else
+        echo "$CYAN###################### Clean Old project OK! ####################$NORMAL"
+    fi
+}
+
+# Копирование исходного кода
+copy() {
+    cd $MICROPYTHON_SRC
+    echo "$CYAN###################### COPYING THE SOURCE CODE ##################$NORMAL"
+    find ./ -type f ! -name "*.md" -exec cp --parents -r -t $MICROPYTHON_MODULES "{}" \+
+    ls -l $MICROPYTHON_MODULES
+    echo "$CYAN###################### COPYING THE SOURCE CODE IS COMPLETE ######$NORMAL"
+}
+
+# Сборка прошивки
+build() {
+    cd $MICROPYTHON   
+    echo "$CYAN###################### MAKE Firmware esp8266 ####################$NORMAL"
+    sleep 2
+    make
+    if [[ $? -ne 0 ]]; then
+        echo "$RED###################### Error Make Firmware! #####################$NORMAL"
+        exit 1
+    else
+        echo "$CYAN###################### MAKE Firmware OK! ########################$NORMAL"
+        cp $FIRMWARE $FIRMWARE_DIR/$NAME
+        echo "FIRMWARE: $NAME"
+        echo "$CYAN###################### FINISH MAKE FIRMWARE #####################$NORMAL"
+    fi
+}
+
+clean
+sleep 1
+copy
+sleep 1
+build
+sleep 1
