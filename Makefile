@@ -71,7 +71,7 @@ start: ${DOCKER} ${ESPSDK_DOCKERFILE}
 
 build-firmware: ${DOCKER} ${ESPSDK_DOCKERFILE}
 	[ -d $(ARCHIVE) ] || mkdir ${ARCHIVE}
-	[ -d $(ESPSDK_FIRMWARE) ] || mkdir ${ESPSDK_FIRMWAREls }
+	[ -d $(ESPSDK_FIRMWARE) ] || mkdir ${ESPSDK_FIRMWARE}
 	find "$(ESPSDK_FIRMWARE)" -name '*.bin' -type f -exec mv -v -t "$(ARCHIVE)" {} +
 	[ `docker ps | grep ${ESPSDK} | wc -l` -eq 1 ] || \
 	docker run \
