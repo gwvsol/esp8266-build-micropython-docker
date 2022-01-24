@@ -40,7 +40,8 @@ help:
 #============================================
 
 pre-build: ${ESPSDK_RULESACCESS} ${ESPSDK_MINICOMCONF}
-	sudo dnf install -y minicom esptool python3-pyserial python3-wheel
+#	sudo dnf install -y minicom esptool python3-pyserial python3-wheel
+	sudo apt install -y minicom esptool python3-serial python3-wheel
 	[ -f ${SYSTEM_RULESACCESS} ] || sudo cp -r ${ESPSDK_RULESACCESS} ${SYSTEM_RULESACCESS}
 	sudo usermod -a -G dialout ${USER}
 	sudo udevadm control --reload-rules
