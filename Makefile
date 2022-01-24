@@ -53,33 +53,39 @@ build-img: ${DOCKER} ${ESPSDK_DOCKERFILE}
 	[ `docker images | grep ${ESPSDK} | wc -l` -eq 1 ] || \
 	docker build \
 	--file ${PWD}/${ESPSDK_DOCKERFILE} \
-	--build-arg TIMEZONE=${TIMEZONE} \
-	--build-arg USER=${USER} \
-	--build-arg USER_ID=${USER_ID} \
-	--tag ${ESPSDK}:latest ./
+	--tag ${ESPSDK}:${MICROPYTHON} .
+#	--build-arg TIMEZONE=${TIMEZONE}
+#	--build-arg USER=${USER}
+#	--build-arg USER_ID=${USER_ID}
 
 start: ${DOCKER} ${ESPSDK_DOCKERFILE}
 	[ `docker ps | grep ${ESPSDK} | wc -l` -eq 1 ] || \
 	docker run \
 	-it --name ${ESPSDK} \
 	--rm \
-	--volume ${PWD}/${ESPSDK_FIRMWARE}:/home/${USER}/firmware \
-	--volume ${PWD}/${ESPSDK_SRC}:/home/${USER}/modules \
-	${ESPSDK}:latest bash
+	--volume ${PWD}/${ESPSDK_FIRMWARE}:/home/work/firmware \
+	--volume ${PWD}/${ESPSDK_SRC}:/home/work/modules \
+	${ESPSDK}:${MICROPYTHON} bash
+#	--volume ${PWD}/${ESPSDK_FIRMWARE}:/home/${USER}/firmware
+#	--volume ${PWD}/${ESPSDK_SRC}:/home/${USER}/modules
 
 build-firmware: ${DOCKER} ${ESPSDK_DOCKERFILE}
+	[ -d $(ARCHIVE) ] || mkdir ${ARCHIVE}
+	[ -d $(ESPSDK_FIRMWARE) ] || mkdir ${ESPSDK_FIRMWAREls }
 	find "$(ESPSDK_FIRMWARE)" -name '*.bin' -type f -exec mv -v -t "$(ARCHIVE)" {} +
 	[ `docker ps | grep ${ESPSDK} | wc -l` -eq 1 ] || \
 	docker run \
 	-it --name ${ESPSDK} \
 	--rm \
-	--volume ${PWD}/${ESPSDK_FIRMWARE}:/home/${USER}/firmware \
-	--volume ${PWD}/${ESPSDK_SRC}:/home/${USER}/modules \
-	${ESPSDK}:latest build
+	--volume ${PWD}/${ESPSDK_FIRMWARE}:/home/work/firmware \
+	--volume ${PWD}/${ESPSDK_SRC}:/home/work/modules \
+	${ESPSDK}:${MICROPYTHON} build
+#	--volume ${PWD}/${ESPSDK_FIRMWARE}:/home/${USER}/firmware
+#	--volume ${PWD}/${ESPSDK_SRC}:/home/${USER}/modules
 
 remove: ${DOCKER} ${ESPSDK_DOCKERFILE}
 	! [ `${DOCKER} images | grep ${ESPSDK} | wc -l` -eq 1 ] || \
-	${DOCKER} rmi ${ESPSDK}:${RELEASE_IMAGE}
+	${DOCKER} rmi ${ESPSDK}:${MICROPYTHON}
 
 release:
 	[ -d $(RELEASE) ] || mkdir ${RELEASE}
