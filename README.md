@@ -14,6 +14,16 @@ Dependencies:
 [pySerial GitHub](https://github.com/pyserial/pyserial)  
 [pySerial Documentation](https://pyserial.readthedocs.io/en/latest/shortintro.html)   
 
+### Using with a pre-assembled Docker image    
+```bash
+git clone https://github.com/gwvsol/esp8266-Build-MicroPython-in-Docker.git esp8266sdk
+
+cd esp8266sdk
+
+docker pull gwvsol/esp8266sdk
+
+docker tag gwvsol/esp8266sdk:latest esp8266sdk:latest
+```
 
 ### Building an SDK image in Docker
 ```bash
