@@ -18,14 +18,14 @@ NORMAL=$(tput sgr0)
 # Очистка
 clean() {
     cd $MICROPYTHON
-    echo "$CYAN###################### CLEAN SDK esp8266 ########################$NORMAL"
+    echo "$CYAN###################### CLEAN SDK ESP8266 ########################$NORMAL"
     sleep 2
     make clean
     if [[ $? -ne 0 ]]; then
-        echo "$RED###################### Error Clean! #############################$NORMAL"
+        echo "$RED###################### ERROR CLEAN! #############################$NORMAL"
         exit 1
     else
-        echo "$CYAN###################### Clean Old project OK! ####################$NORMAL"
+        echo "$CYAN###################### CLEAN OK! #############################$NORMAL"
     fi
 }
 
@@ -41,14 +41,14 @@ copy() {
 # Сборка прошивки
 build() {
     cd $MICROPYTHON   
-    echo "$CYAN###################### MAKE Firmware esp8266 ####################$NORMAL"
+    echo "$CYAN###################### MAKE FIRMWARE ESP8266 ####################$NORMAL"
     sleep 2
     make
     if [[ $? -ne 0 ]]; then
-        echo "$RED###################### Error Make Firmware! #####################$NORMAL"
+        echo "$RED###################### ERROR MAKE FIRMWARE! #####################$NORMAL"
         exit 1
     else
-        echo "$CYAN###################### MAKE Firmware OK! ########################$NORMAL"
+        echo "$CYAN###################### MAKE FIRMWARE OK! ########################$NORMAL"
         cp $FIRMWARE $FIRMWARE_DIR/$NAME
         echo "FIRMWARE: $NAME"
         echo "$CYAN###################### FINISH MAKE FIRMWARE #####################$NORMAL"
