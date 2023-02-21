@@ -1,0 +1,16 @@
+######################################################################
+##
+## STAGE 3: This is the final image
+##
+
+FROM base-micropyton-image-1.19:2023-02-21-01 as builder
+LABEL maintainer="Mikhail Fedorov" email="jwvsol@yandex.ru"
+LABEL version="latest"
+
+ENV MICROPYTHON=https://github.com/micropython/micropython.git
+
+RUN cd ${HOME} \
+    && git clone ${MICROPYTHON} \
+    && ln -s micropython/ports/esp8266 . \
+    && cd micropython \
+    && git submodule update --init
