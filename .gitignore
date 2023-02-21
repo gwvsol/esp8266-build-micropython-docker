@@ -9,6 +9,7 @@ release/*
 .bash_history
 .Trash-1000
 archive
-*.bz2
-*.gz
-*.xz
+# *.bz2
+# *.gz
+# *.xz
+lib
